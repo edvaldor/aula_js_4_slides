@@ -1,0 +1,167 @@
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aula JavaScript: Relógio e Timer</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif; font-size: 32px;
+      background-color: #fff;
+      color: #000;
+      overflow-x: hidden;
+    }
+    .slide {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 30px;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    .slide.active {
+      display: flex;
+    }
+    h1, h2 {
+      color: #0057ff;
+    }
+    pre {
+      background: #f4f4f4;
+      border-left: 5px solid #0057ff;
+      padding: 10px;
+      width: 90%;
+      max-width: 800px;
+      text-align: left;
+    }
+    ul {
+      text-align: left;
+      max-width: 800px;
+      font-size: 1.5em;
+    }
+    #navigator {
+      position: fixed;
+      bottom: 10px;
+      right: 20px;
+      font-size: 0.9em;
+    }
+    #navigator button {
+      padding: 6px 12px;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="slide active">
+  <h1>Projeto JavaScript Prático</h1>
+  <p>Relógio em Tempo Real e Timer com HTML + CSS + JavaScript</p>
+</div>
+
+<div class="slide">
+  <h2>Parte 1: Relógio em Tempo Real</h2>
+  <pre>
+function AtualizarRelogio(){
+  const agora = new Date();
+  const horas = agora.getHours().toString().padStart(2, '0');
+  const minut = agora.getMinutes().toString().padStart(2, '0');
+  const segun = agora.getSeconds().toString().padStart(2, '0');
+  document.getElementById("relogio").innerText = `${horas}:${minut}:${segun}`;
+}
+setInterval(AtualizarRelogio, 1000);
+AtualizarRelogio();</pre>
+</div>
+
+<div class="slide">
+  <h2>Parte 2: Cronômetro (Timer)</h2>
+  <pre>
+let segundos = 0;
+let intervalo;
+
+function iniciar() {
+  intervalo = setInterval(() => {
+    segundos++;
+    atualizarTimer();
+  }, 1000);
+}</pre>
+</div>
+
+<div class="slide">
+  <h2>Funções auxiliares do Timer</h2>
+  <pre>
+function formatar(segundos) {
+  const h = String(Math.floor(segundos/3600)).padStart(2, '0');
+  const m = String(Math.floor((segundos % 3600)/60)).padStart(2, '0');
+  const s = String(segundos % 60).padStart(2, '0');
+  return `${h}:${m}:${s}`;
+}
+function atualizarTimer() {
+  document.getElementById("timer").innerText = formatar(segundos);
+}</pre>
+</div>
+
+<div class="slide">
+  <h2>Botões do Timer</h2>
+  <pre>
+function pausar() {
+  clearInterval(intervalo);
+  intervalo = null;
+}
+function encerrar() {
+  pausar();
+  segundos = 0;
+  atualizarTimer();
+}</pre>
+</div>
+
+<div class="slide">
+  <h2>🎯 Desafio Final</h2>
+  <ul>
+    <li>Adicione um <strong>timer regressivo</strong> com botão "Começar contagem"</li>
+    <li>Estilize toda a página com <strong>CSS</strong> (fontes, cores, espaçamento)</li>
+    <li>Entregue via GitHub + Vercel com as tags:</li>
+    <li><code>js-unipar-25</code>, <code>timer-regressivo</code>, <code>data da aula</code></li>
+  </ul>
+</div>
+
+<div id="navigator">
+  <span id="counter">Slide 1</span>
+  <button onclick="prevSlide()">◀</button>
+  <button onclick="nextSlide()">▶</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  let current = 0;
+
+  function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[index].classList.add('active');
+    counter.textContent = `Slide ${index + 1} de ${slides.length}`;
+  }
+
+  function nextSlide() {
+    current = (current + 1) % slides.length;
+    showSlide(current);
+  }
+
+  function prevSlide() {
+    current = (current - 1 + slides.length) % slides.length;
+    showSlide(current);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') nextSlide();
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+  });
+
+  showSlide(current);
+</script>
+</body>
+</html>
